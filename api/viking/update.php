@@ -1,7 +1,7 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/api/dao/viking.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/api/dao/weapon.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/api/utils/server.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/api/viking/service.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/api/weapon/service.php';
 
 header('Content-Type: application/json');
 
@@ -18,17 +18,17 @@ if (!isset($_GET['id'])) {
 
 $id = intval($_GET['id']);
 
-if (validateMandatoryParams($data, ['name', 'health', 'attack', 'defense'])) {
-    verifyViking($data);
+if (validateMandatoryParams($data, ['type', 'damage'])) {
+    verifyWeapon($data);
 
-    $updated = updateViking($id, $data['name'], $data['health'], $data['attack'], $data['defense']);
+    $updated = updateWeapon($id, $data['type'], $data['damage']);
     if ($updated == 1) {
         http_response_code(204);
     } elseif ($updated == 0) {
-        returnError(404, 'Viking not found');
+        returnError(404, 'Weapon not found');
     } else {
-        returnError(500, 'Could not update the viking');
+        returnError(500, 'Could not update the weapon');
     }
 } else {
-    returnError(412, 'Mandatory parameters : name, health, attack, defense');
+    returnError(412, 'Mandatory parameters : type, damage');
 }
