@@ -15,10 +15,16 @@ function methodIsAllowed(string $action): bool {
     }
 }
 
-function getBody(): array {
-    $body = file_get_contents('php://input');
-    return json_decode($body, true);
+function getBody() {
+    $data = json_decode(file_get_contents('php://input'), true);
+    if ($data === null) {
+        returnError(400, 'Invalid JSON');
+        exit;
+    }
+    return $data;
 }
+
+
 
 function returnError (int $code, string $message) {
     http_response_code($code);
@@ -26,11 +32,11 @@ function returnError (int $code, string $message) {
     exit();
 }
 
-function validateMandatoryParams(array $data, array $mandatoryParams): bool {
-    foreach ($mandatoryParams as $param) {
+function validateMandatoryParams($data, $requiredParams) {
+    foreach ($requiredParams as $param) {
         if (!isset($data[$param])) {
-            return false;
+            return false; 
         }
     }
-    return true;
+
 }
